@@ -15,7 +15,7 @@ def main():
 
     url = DownloadURL.from_url(args.dest)
     if not isinstance(url.id, RootID):
-        print("Error: please use the Admin URL to resume the upload", file=sys.stderr)
+        print("Error: please use the Admin URL to delete the file", file=sys.stderr)
         sys.exit(1)
 
     client = ClientAPI(requests.Session(), url.server)
