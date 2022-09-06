@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+import argparse
+import requests
+import sys
+
+from secsend.client import DownloadURL, RootID, ClientAPI
+from secsend.stream import DownloadCtx
+from secsend.utils import sanitize_name, get_nonexistant_file
+from secsend.cli import get_progressbar, ask_password, process_error
+
+def main():
+    parser = argparse.ArgumentParser(description="Upload encrypted files")
+    parser.add_argument("-c", action='store_true', dest='resume', help="Resume download")
+    parser.add_argument("-o", type=str, dest='output', help="Output path")
+    parser.add_argument("source", type=str, help="Download URL")
+    args = parser.parse_args()
+
+    url = DownloadURL.from_url(args.source).file_url()
+    if not url.has_key():
+        ask_password(url)
+    ctx = DownloadCtx.from_url(url)
+    metadata = ctx.get_metadata()
+
+    if args.output and args.output == "-":
+        out = sys.stdout.buffer
+        out_seek = 0
+        name = None
+        if args.resume:
+            print("Error: can't resume a download when writing to stdout")
+            sys.exit(1)
+    else:
+        if args.output:
+            name = args.output
+        else:
+            name = sanitize_name(metadata.name)
+            if not args.resume:
+                name = get_nonexistant_file(name)
+
+        if args.resume:
+            out = open(name, "ab")
+            out_seek = out.tell()
+            print(out_seek)
+        else:
+            out = open(name, "wb")
+            out_seek = 0
+
+    print("[+] File mime: %s" % metadata.mime_type, file=sys.stderr)
+
+    with get_progressbar(name, ctx.decrypted_size()) as bar:
+        done = out_seek
+        bar.update(done)
+        for d in ctx.download(out_seek):
+            out.write(d)
+            done += len(d)
+            bar.update(done)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        process_error(e)

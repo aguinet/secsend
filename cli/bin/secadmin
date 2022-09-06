@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+import argparse
+import sys
+import requests
+
+from secsend.client import DownloadURL, RootID, ClientAPI
+from secsend.cli import process_error
+
+def main():
+    parser = argparse.ArgumentParser(description="Encrypted files administration")
+    actions = parser.add_mutually_exclusive_group(required=True)
+    actions.add_argument("-d", action='store_true', dest='delete', help="Delete (incomplete) file")
+    parser.add_argument("dest", type=str, help="Admin URL of the uploaded file")
+    args = parser.parse_args()
+
+    url = DownloadURL.from_url(args.dest)
+    if not isinstance(url.id, RootID):
+        print("Error: please use the Admin URL to resume the upload", file=sys.stderr)
+        sys.exit(1)
+
+    client = ClientAPI(requests.Session(), url.server)
+    if args.delete:
+        client.delete(url.id)
+        print("File deleted with success")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        process_error(e)

@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+import argparse
+import sys
+import requests
+import secrets
+import getpass
+from pathlib import Path
+
+from secsend.stream import UploadCtx
+from secsend.client import DownloadURL, RootID
+from secsend.cli import get_progressbar, process_error
+
+def main():
+    parser = argparse.ArgumentParser(description="Upload encrypted files")
+    parser.add_argument("-c", action='store_true', dest='resume', help="Resume upload (if not reading from stdin).")
+    parser.add_argument("--mime", type=str, help="Override mime type.")
+    parser.add_argument("--filename", type=str, help="Override file name. Must be set if upload from stdin.")
+    parser.add_argument("--timeout", type=int, help="Time limit in seconds. Default is the highest value supported by the server. (0 means infinity, if supported)")
+    parser.add_argument("--auth-login", type=str, help="HTTP authentication login")
+    parser.add_argument("--auth-password", type=str, help="HTTP authentication password (prompted if not provided)")
+    parser.add_argument("source", type=str, help="File to upload (- to read from stdin).")
+    parser.add_argument("dest", type=str, help="URL to the server (e.g. https://share.example.com).")
+    args = parser.parse_args()
+
+    if args.resume and args.source == "-":
+        print("Error: can't resume upload from stdin", file=sys.stderr)
+        sys.exit(1)
+
+    auth = None
+    if args.auth_login is not None:
+        password = args.auth_password
+        if password is None:
+            password = getpass.getpass()
+        auth = (args.auth_login, password)
+
+    if args.source == "-":
+        if args.filename is None:
+            print("Error: please use --filename to upload from stdin", file=sys.stderr)
+            sys.exit(1)
+        ctx = UploadCtx.from_stdin(args.filename, args.mime, auth=auth)
+    else:
+        ctx = UploadCtx.from_source_file(args.source, args.mime, auth=auth)
+
+    if args.resume:
+        url = DownloadURL.from_url(args.dest)
+        if not isinstance(url.id, RootID):
+            print("Error: please use the Admin URL to resume the upload", file=sys.stderr)
+            sys.exit(1)
+        ctx.upload_resume(url)
+    else:
+        ctx.upload_new(args.dest, args.timeout)
+    print("[+] File ID: %s" % ctx.id.file_id())
+    print("[+] File key: %s" % ctx.key.hex())
+    print("[+] Admin URL: %s" % ctx.url)
+    print("[+] Download URL: %s" % ctx.url.file_url())
+
+    class Progress:
+        def __init__(self, bar):
+            self.bar = bar
+            self.cur = 0
+
+        def __call__(self, l):
+            self.cur += l
+            self.bar.update(self.cur)
+
+    with get_progressbar(ctx.name, ctx.in_size) as bar:
+        ctx.upload_push(Progress(bar))
+    ctx.upload_finish()
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        process_error(e)

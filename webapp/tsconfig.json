@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist_web/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "esnext",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "downlevelIteration": true
+  },
+  "include": [
+    "src",
+    "tests"
+  ],
+  "exclude": [
+    "src/sw",
+    "dist_web",
+    "node_modules",
+    "!node_modules/@types"
+  ]
+}

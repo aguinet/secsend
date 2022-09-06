@@ -1,0 +1,88 @@
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  background: #383f49;
+  transition: all 0.3s;
+  color: #939ca7;
+  padding-right: 7px;
+}
+
+#sidebar.active {
+  margin-left: -250px;
+}
+
+#sidebar h1 {
+  color: #ffffff;
+  font-size: 2em;
+  text-align: center;
+  padding-top: 8px;
+  padding-bottom: .5em;
+}
+
+#sidebar h2 {
+  font-size: 1.1em;
+  color: #ffffff;
+  padding: 0;
+  margin: 0;
+  margin-bottom: .4em;
+}
+
+#sidebar table {
+  padding: 0;
+  margin: 0;
+}
+
+#sidebar ul {
+  padding: 0;
+  margin: 0;
+}
+
+#sidebar hr {
+  margin-top: .6em;
+  margin-bottom: 1em;
+}
+
+#sidebar table td:first-child {
+  width: 180px;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+#content {
+  width: 100%;
+  padding: 20px;
+  min-height: 100vh;
+  align-items: flex-start;
+}
+
+.table-links td {
+  padding-right: 5px;
+}
+
+.table-links tr:first-child {
+  border-bottom: 1pt dotted black
+}
+
+.table-links tr:first-child td {
+  padding-bottom: .5em;
+}
+
+.table-links .tr-padding-top td {
+  padding-top: .5em;
+}

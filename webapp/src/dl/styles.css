@@ -1,0 +1,10 @@
+.field-icon {
+  margin-left: -20px;
+  z-index: 2;
+}
+.fa-eye {
+  content: url("./eye-solid.svg");
+}
+.fa-eye-slash {
+  content: url("./eye-slash-solid.svg");
+}

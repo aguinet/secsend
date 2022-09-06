@@ -1,0 +1,19 @@
+FROM node:18-bullseye-slim as builder
+RUN apt-get update && DEBIAN_FRONTEND=non-interactive apt-get install -yqq \
+    python3 python3-pip && \
+    mkdir /tmp/secsend
+COPY ./api /tmp/secsend/api
+COPY ./webapp /tmp/secsend/webapp
+COPY ./__version__.py /tmp/secsend
+
+RUN cd /tmp/secsend/api && python3 ./setup.py bdist_wheel
+RUN cd /tmp/secsend/webapp && npm install && npm run build && python3 ./setup.py bdist_wheel
+
+FROM python:3.10-slim-bullseye
+
+COPY --from=builder /tmp/secsend/api/dist/*.whl /tmp
+COPY --from=builder /tmp/secsend/webapp/dist/*.whl /tmp
+RUN pip install /tmp/*.whl && rm /tmp/*.whl
+
+ENV SECSEND_BACKEND_FILES_ROOT=/data
+ENTRYPOINT /usr/local/bin/sanic secsend_api.prod.app -p ${SECSEND_LISTEN_PORT:-8000} -H 0.0.0.0

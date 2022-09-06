@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "esnext",
+    "allowJs": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "lib": ["esnext","es6","es5","webworker"],
+    "rootDir": ".."
+  },
+  "include": [
+    "."
+  ]
+}

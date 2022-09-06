@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  tests:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: 'npm'
+          cache-dependency-path: webapp/package-lock.json
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: |
+            api/setup.py
+            cli/setup.py
+      - name: CLI tests
+        run: cd cli && pip install -e .[dev] && cd tests && python -m unittest
+      - name: API tests
+        run: cd api && pip install -e .[dev] && cd tests && python -m unittest
+      - name: Webapp tests
+        run: cd webapp && npm i && npm run eslint && npm run test
