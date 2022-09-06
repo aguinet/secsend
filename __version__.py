@@ -1,4 +1,4 @@
-__version__ = "1.0.0rc0"
+__version__ = "1.0.0"
 __author__ = "Adrien Guinet"
 __author_email__ = "adrien@guinet.me"
 __copyright__ = "Copyright 2022 Adrien Guinet"
