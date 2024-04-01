@@ -28,6 +28,6 @@ jobs:
       - name: CLI tests
         run: cd cli && pip install -e .[dev] && cd tests && python -m unittest
       - name: API tests
-        run: cd api && pip install -e .[dev] && cd tests && python -m unittest
+        run: cd api && pip install -e .[dev] && pytest tests
       - name: Webapp tests
         run: cd webapp && npm i && npm run eslint && npm run test

@@ -16,11 +16,12 @@ setup(name='secsend_api',
       packages=['secsend_api'],
       install_requires=[
           'jsonschema==4.15.*',
-          'sanic==21.12.*',
+          'sanic==23.12.1'
       ],
       extras_require={
           'dev': [
-              'sanic-testing==0.8.3',
+              'sanic-testing==23.12.0',
+              'pytest_asyncio==0.23.6'
           ],
       }
 )

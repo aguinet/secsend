@@ -146,7 +146,7 @@ async def download(request, id_):
     )
 
 @bp.post("/delete/<id_>")
-async def upload_finish(request, id_):
+async def delete_id(request, id_):
     rid = RootID.from_str(id_)
     fid = rid.file_id()
     f = get_backend(request).open(fid)
@@ -208,9 +208,9 @@ def declare_app(enable_cors=False, backend_files_root=None, html_root=None, time
 
     if html_root is not None:
         app.ctx.html_root = html_root
-        app.static("/", os.path.join(html_root, "index.html"))
-        app.static("/", html_root)
-        app.static("/dl", os.path.join(html_root, "dl.html"))
+        app.static("/", html_root, name="webapp")
+        app.static("/", os.path.join(html_root, "index.html"), name="webapp_index")
+        app.static("/dl", os.path.join(html_root, "dl.html"), name="dl")
     else:
         print("Warning: no html_root has been specified, sanic won't serve the webapp", file=sys.stderr)
 
