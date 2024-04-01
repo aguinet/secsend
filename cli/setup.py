@@ -20,9 +20,9 @@ setup(name='secsend',
           'bin/secadmin'
       ],
       install_requires=[
-          'requests>=2.28,<3',
+          'requests>=2.31,<3',
           'python-magic>=0.4,<1',
-          'cryptography==37.*',
+          'cryptography==42.*',
           'progressbar2==4.*'
       ],
       extras_require={
