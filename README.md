@@ -67,7 +67,7 @@ secsend (e.g. file size limit).
 Then, run secsend with docker:
 
 ```
-# docker run --env-file docker.env -p 8000:80 -v /path/to/data/storage:/data aguinet/secsend:v1.1.0
+# docker run --env-file docker.env -p 8000:80 -v /path/to/data/storage:/data aguinet/secsend:v1.1.1
 ```
 
 `/path/to/data/storage` will contain the uploaded files and associated metadata.
