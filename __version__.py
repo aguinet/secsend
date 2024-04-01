@@ -1,6 +1,6 @@
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "Adrien Guinet"
 __author_email__ = "adrien@guinet.me"
-__copyright__ = "Copyright 2022 Adrien Guinet"
+__copyright__ = "Copyright 2024 Adrien Guinet"
 __url__ = "http://github.com/aguinet/secsend"
 __license__ = "GPL"
