@@ -36,11 +36,13 @@ jobs:
           python ./setup.py bdist_wheel
       - name: Publish to Pypi
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           echo cli/dist/* api/dist/* webapp/dist/*
-          twine upload cli/dist/* api/dist/* webapp/dist/*
+          TWINE_PASSWORD='${{ secrets.PYPI_SECSEND }}' twine upload cli/dist/*
+          TWINE_PASSWORD='${{ secrets.PYPI_SECSEND_API }}' twine upload api/dist/*
+          TWINE_PASSWORD='${{ secrets.PYPI_SECSEND_WEBAPP }}' twine upload webapp/dist/*
 
   publish_docker:
 
