@@ -33,8 +33,14 @@ app.route('/', uploadView);
 
 const mountProm = app.mount('body');
 
-// Register service worker
-navigator.serviceWorker.register('./sw.js', {'scope': '/v1/download/'});
+// Test if serviceWorker is available, the feature may not be available in private mode in FF
+// see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/serviceWorker
+if (navigator.serviceWorker == null) {
+  console.log('[**] No serviceWorker available, maybe due to FF in private mode ?');
+} else {
+ // Register service worker
+ navigator.serviceWorker.register('./sw.js', {'scope': '/v1/download/'});
+}
 
 export default async () => {
   await mountProm;
