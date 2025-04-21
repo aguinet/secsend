@@ -26,6 +26,12 @@ function cleanupKey(key: string) {
 async function run() {
   const loc = window.location;
   const rootUrl = loc.origin + loc.pathname.replace("/dl","/");
+
+  if (navigator.serviceWorker == null) {
+    alert('No serviceWorker available ! Please note the feature may not be available in private mode in Firefox');
+    loc.replace(rootUrl);
+    return;
+  }
   try {
     await navigator.serviceWorker.register('./sw.js', {'scope': '/v1/download/'});
   }
