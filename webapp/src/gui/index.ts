@@ -38,8 +38,8 @@ const mountProm = app.mount('body');
 if (navigator.serviceWorker == null) {
   console.log('[**] No serviceWorker available, maybe due to FF in private mode ?');
 } else {
- // Register service worker
- navigator.serviceWorker.register('./sw.js', {'scope': '/v1/download/'});
+  // Register service worker
+  navigator.serviceWorker.register('./sw.js', {'scope': '/v1/download/'});
 }
 
 export default async () => {
