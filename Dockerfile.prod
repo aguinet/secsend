@@ -1,4 +1,4 @@
-FROM node:18-bullseye-slim as builder
+FROM node:18-bullseye-slim AS builder
 RUN apt-get update && DEBIAN_FRONTEND=non-interactive apt-get install -yqq \
     python3 python3-pip && \
     mkdir /tmp/secsend
@@ -9,7 +9,7 @@ COPY ./__version__.py /tmp/secsend
 RUN cd /tmp/secsend/api && python3 ./setup.py bdist_wheel
 RUN cd /tmp/secsend/webapp && npm install && npm run build && python3 ./setup.py bdist_wheel
 
-FROM python:3.10-slim-bullseye
+FROM python:3.13-slim-bullseye
 
 COPY --from=builder /tmp/secsend/api/dist/*.whl /tmp
 COPY --from=builder /tmp/secsend/webapp/dist/*.whl /tmp
