@@ -1,3 +1,8 @@
+# v1.1.2
+
+* Update JS dependencies
+* Use python3.13 as a base docker image
+
 # v1.1.1
 
 * CLI: update cryptography and requests
